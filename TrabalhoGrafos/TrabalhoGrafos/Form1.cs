@@ -1,134 +1,179 @@
 using System;
-using System.Drawing;   // Para desenhar formas, linhas, textos
-using System.Windows.Forms; // Para criar a janela
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
-public class GrafoForm : Form
+namespace TrabalhoGrafos
 {
-    // Método que desenha na tela
-    protected override void OnPaint(PaintEventArgs e)
+    public partial class Form1 : Form
     {
-        base.OnPaint(e);
-
-        // Objeto para desenhar
-        Graphics g = e.Graphics;
-
-        // Caneta (cor preta, espessura 2px) -> usada para linhas e bordas
-        Pen caneta = new Pen(Color.Black, 2);
-
-        // Cor de preenchimento dos vértices
-        Brush brush = Brushes.LightBlue;
-
-        // Fonte para escrever o número do vértice
-        Font fonte = new Font("Arial", 10);
-
-        // Posições fixas dos vértices (x, y)
-        Point[] vertices = {
-
-           //VÉRTICES GRAFO 1 
-
-            new Point(100, 100),  // vértice 1
-            new Point(250, 100),  // vértice 2
-            new Point(175, 200),   // vértice 
-
-           //VÉRTICES GRAFO 2
-
-            new Point(300, 300),   // vértice 4
-            new Point(450, 300),   // vértice 5
-            new Point(375, 400),   // vértice 6
-
-           //VÉRTICES GRAFO 3
-
-            new Point(500, 500),   // vértice 7
-            new Point(650, 500),   // vértice 8
-            new Point(575, 600),   // vértice 9
-
-           //VÉRTICES GRAFO 4
-
-            new Point(700, 300),   // vértice 10
-            new Point(850, 300),   // vértice 11
-            new Point(775, 400),   // vértice 12
-                     
-           //VÉRTICES GRAFO 5
-
-            new Point(950, 100),   // vértice 10
-            new Point(1100, 100),   // vértice 11
-            new Point(1025, 200)   // vértice 12                  
-        };
-
-        // ----------- DESENHAR ARESTAS (linhas entre vértices) -----------
-
-       
-       // LIGAÇÕES GRAFO 1 ===================================================
-        // Linha entre o vértice 1 e o vértice 2
-        g.DrawLine(caneta, vertices[0], vertices[1]);
-
-        // Linha entre o vértice 2 e o vértice 3
-        g.DrawLine(caneta, vertices[1], vertices[2]);
-
-        // Linha entre o vértice 3 e o vértice 1
-        g.DrawLine(caneta, vertices[2], vertices[0]);
-
-       // LIGAÇÕES GRAFO 2 ===================================================       
-        // Linha entre o vértice 4 e o vértice 5
-        g.DrawLine(caneta, vertices[3], vertices[4]);
-
-        // Linha entre o vértice 5 e o vértice 6
-        g.DrawLine(caneta, vertices[4], vertices[5]);
-
-        // Linha entre o vértice 6 e o vértice 4
-        g.DrawLine(caneta, vertices[5], vertices[3]);
-
-        // LIGAÇÕES GRAFO 3 ===================================================       
-        // Linha entre o vértice 7 e o vértice 8
-        g.DrawLine(caneta, vertices[6], vertices[7]);
-
-        // Linha entre o vértice 8 e o vértice 9
-        g.DrawLine(caneta, vertices[7], vertices[8]);
-
-        // Linha entre o vértice 9 e o vértice 7
-        g.DrawLine(caneta, vertices[8], vertices[6]);
-
-       // LIGAÇÕES GRAFO 4 ===================================================       
-        // Linha entre o vértice 10 e o vértice 11
-        g.DrawLine(caneta, vertices[9], vertices[10]);
-
-        // Linha entre o vértice 11 e o vértice 12
-        g.DrawLine(caneta, vertices[10], vertices[11]);
-
-        // Linha entre o vértice 12 e o vértice 10
-        g.DrawLine(caneta, vertices[11], vertices[9]);
-
-       //LIGAÇÕES GRAFO 5 ===================================================       
-        // Linha entre o vértice 13 e o vértice 14
-        g.DrawLine(caneta, vertices[12], vertices[13]);
-
-        // Linha entre o vértice 14 e o vértice 15
-        g.DrawLine(caneta, vertices[13], vertices[14]);
-
-        // Linha entre o vértice 15 e o vértice 13
-        g.DrawLine(caneta, vertices[14], vertices[12]);
+        // VariÃ¡veis de Estado (para o grafo)
+        private List<TextBox> nomeVertexTextBoxes = new List<TextBox>();
+        private TextBox txtLigacoes;
+        private Label labelLigacoes;
         
-        // ----------- DESENHAR VÉRTICES (bolinhas com número) -----------
+        // VariÃ¡veis que armazenarÃ£o os dados do grafo para desenho
+        private List<string> verticesNomes;
+        private List<(string, string)> arestas; 
 
-        for (int i = 0; i < vertices.Length; i++)
+        public Form1()
         {
-            // Desenha círculo preenchido (o vértice)
-            g.FillEllipse(brush, vertices[i].X - 20, vertices[i].Y - 20, 40, 40);
+            InitializeComponent();
+            
+            // InicializaÃ§Ã£o dos controles dinÃ¢micos (para que existam antes de serem manipulados)
+            this.txtLigacoes = new TextBox();
+            this.labelLigacoes = new Label();
+            
+            this.txtLigacoes.Multiline = true;
+            this.txtLigacoes.Size = new Size(300, 100);
+            this.labelLigacoes.Text = "LigaÃ§Ãµes (Ex: V1-V2, V1-V3):";
+            this.labelLigacoes.AutoSize = true;
 
-            // Desenha a borda do círculo
-            g.DrawEllipse(caneta, vertices[i].X - 20, vertices[i].Y - 20, 40, 40);
+            this.Controls.Add(this.txtLigacoes);
+            this.Controls.Add(this.labelLigacoes);
 
-            // Escreve o número do vértice dentro do círculo
-            g.DrawString((i + 1).ToString(), fonte, Brushes.Black, vertices[i].X - 10, vertices[i].Y - 10);
+            // Oculta os campos de ligaÃ§Ã£o no inÃ­cio
+            this.txtLigacoes.Visible = false;
+            this.labelLigacoes.Visible = false;
+        }
+
+        /// <summary>
+        /// Manipulador do botÃ£o "Confirmar Nomes". Cria campos de entrada dinamicamente.
+        /// </summary>
+        private void btnConfirmar_Click(object sender, EventArgs e)
+        {
+            // Limpa controles antigos (para evitar duplicaÃ§Ãµes se o usuÃ¡rio clicar mais de uma vez)
+            foreach (var control in nomeVertexTextBoxes)
+            {
+                this.Controls.Remove(control);
+            }
+            nomeVertexTextBoxes.Clear();
+            
+            int numVertices = (int)this.numUpDownQuantidade.Value;
+            int yPos = 60; 
+
+            // Loop para Criar os campos de nome
+            for (int i = 0; i < numVertices; i++)
+            {
+                Label lbl = new Label();
+                lbl.Text = $"Nome do VÃ©rtice {i + 1}:";
+                lbl.Location = new Point(20, yPos);
+                this.Controls.Add(lbl);
+
+                TextBox txt = new TextBox();
+                txt.Name = $"txtNomeVertice_{i}"; 
+                txt.Location = new Point(150, yPos);
+                this.Controls.Add(txt);
+                
+                nomeVertexTextBoxes.Add(txt);
+
+                yPos += 30;
+            }
+
+            // Posiciona e mostra a Ã¡rea de LigaÃ§Ãµes
+            this.labelLigacoes.Location = new Point(20, yPos + 10);
+            this.txtLigacoes.Location = new Point(20, yPos + 35);
+            this.txtLigacoes.Visible = true;
+            this.labelLigacoes.Visible = true;
+            
+            // Mostra o BotÃ£o de Animar
+            this.btnAnimar.Location = new Point(20, yPos + 140); // Reposiciona o botÃ£o
+            this.btnAnimar.Visible = true;
+        }
+
+        /// <summary>
+        /// Manipulador do botÃ£o "Gerar Grafo e Animar". Coleta os dados e inicia o desenho.
+        /// </summary>
+        private void btnAnimar_Click(object sender, EventArgs e)
+        {
+            // 1. Coleta os Nomes dos VÃ©rtices
+            this.verticesNomes = new List<string>();
+            foreach (TextBox txt in nomeVertexTextBoxes)
+            {
+                this.verticesNomes.Add(txt.Text.Trim()); 
+            }
+
+            // 2. Coleta e Processa as LigaÃ§Ãµes
+            string ligacoesTexto = this.txtLigacoes.Text.Replace(" ", "");
+            this.arestas = new List<(string, string)>();
+            
+            string[] pares = ligacoesTexto.Split(',');
+            foreach (string par in pares)
+            {
+                string[] no = par.Split('-');
+                if (no.Length == 2)
+                {
+                    this.arestas.Add((no[0].Trim(), no[1].Trim()));
+                }
+            }
+            
+            // ForÃ§a o PictureBox a chamar o mÃ©todo Paint para desenhar o grafo
+            this.pictureBoxGrafo.Invalidate(); 
+        }
+
+        /// <summary>
+        /// Onde a mÃ¡gica acontece: Desenha os vÃ©rtices e arestas no PictureBox.
+        /// </summary>
+        private void pictureBoxGrafo_Paint(object sender, PaintEventArgs e)
+        {
+            if (this.verticesNomes == null || this.verticesNomes.Count == 0)
+            {
+                return;
+            }
+
+            Graphics g = e.Graphics;
+            Pen penAresta = new Pen(Color.Black, 2);
+            SolidBrush brushVertice = new SolidBrush(Color.Red);
+            SolidBrush brushTexto = new SolidBrush(Color.Black);
+            Font fontTexto = new Font("Arial", 10);
+            
+            int raio = 15; 
+            
+            // CÃ¡lculo do Layout Circular
+            int centroX = this.pictureBoxGrafo.Width / 2;
+            int centroY = this.pictureBoxGrafo.Height / 2;
+            int raioLayout = Math.Min(centroX, centroY) - 50; 
+            
+            Dictionary<string, Point> posicoes = new Dictionary<string, Point>();
+            
+            // 1. Posiciona os VÃ©rtices em CÃ­rculo
+            for (int i = 0; i < verticesNomes.Count; i++)
+            {
+                double angulo = 2 * Math.PI * i / verticesNomes.Count;
+                int x = (int)(centroX + raioLayout * Math.Cos(angulo));
+                int y = (int)(centroY + raioLayout * Math.Sin(angulo));
+                posicoes.Add(verticesNomes[i], new Point(x, y));
+            }
+            
+            // 2. Desenha as Arestas
+            foreach (var aresta in this.arestas)
+            {
+                if (posicoes.ContainsKey(aresta.Item1) && posicoes.ContainsKey(aresta.Item2))
+                {
+                    Point p1 = posicoes[aresta.Item1];
+                    Point p2 = posicoes[aresta.Item2];
+                    g.DrawLine(penAresta, p1, p2);
+                }
+            }
+            
+            // 3. Desenha os VÃ©rtices (CÃ­rculos e Nomes)
+            foreach (var kvp in posicoes)
+            {
+                Point centro = kvp.Value;
+                string nome = kvp.Key;
+                
+                // Desenha o cÃ­rculo
+                g.FillEllipse(brushVertice, centro.X - raio, centro.Y - raio, raio * 2, raio * 2);
+                g.DrawEllipse(penAresta, centro.X - raio, centro.Y - raio, raio * 2, raio * 2);
+
+                // Desenha o nome
+                SizeF tamanhoTexto = g.MeasureString(nome, fontTexto);
+                g.DrawString(nome, fontTexto, brushTexto, centro.X - tamanhoTexto.Width / 2, centro.Y - tamanhoTexto.Height / 2);
+            }
+            
+            penAresta.Dispose();
+            brushVertice.Dispose();
+            brushTexto.Dispose();
         }
     }
-
-    // Método principal -> abre a janela
-    [STAThread]
-    static void Main()
-    {
-        Application.Run(new GrafoForm());
-    }
-
-
 }

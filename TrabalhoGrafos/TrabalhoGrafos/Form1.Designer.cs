@@ -1,100 +1,161 @@
 ﻿namespace TrabalhoGrafos
 {
-    // Declaração parcial da classe Form1
     public partial class Form1
     {
         private System.ComponentModel.IContainer components = null;
 
-        // --- DECLARAÇÃO DOS CONTROLES FIXOS ---
-
-        private System.Windows.Forms.Label labelQuantidade; 
-        private System.Windows.Forms.NumericUpDown numUpDownQuantidade; 
-        private System.Windows.Forms.Button btnConfirmar; 
-        private System.Windows.Forms.Button btnAnimar;
-        // NOVA VARIÁVEL: O canvas (tela) onde o grafo será desenhado
+        // Controles UI
+        private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.PictureBox pictureBoxGrafo;
+        
+        // Grupo A
+        private System.Windows.Forms.GroupBox grpGeracao;
+        private System.Windows.Forms.Button btnGerarAleatorio;
+        private System.Windows.Forms.Button btnGerarManual;
+        private System.Windows.Forms.CheckBox chkDirigido;
+        private System.Windows.Forms.TextBox txtNumVertices;
+        private System.Windows.Forms.Label lblNumV;
+        private System.Windows.Forms.Label lblManual;
+        private System.Windows.Forms.TextBox txtArestasManual;
+
+        // Grupo B
+        private System.Windows.Forms.GroupBox grpAlgoritmos;
+        private System.Windows.Forms.Button btnAGM;
+        private System.Windows.Forms.Button btnCaminho;
+        private System.Windows.Forms.Button btnBFS;
+        private System.Windows.Forms.Button btnDFS;
+        private System.Windows.Forms.ComboBox cmbOrigem;
+        private System.Windows.Forms.ComboBox cmbDestino;
+        private System.Windows.Forms.Label lblDe;
+        private System.Windows.Forms.Label lblPara;
+        
+        private System.Windows.Forms.TextBox txtLog;
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
-
-        #region Código gerado pelo Windows Form Designer
 
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            
-            // Instanciação de Controles Fixos
-            this.labelQuantidade = new System.Windows.Forms.Label();
-            this.numUpDownQuantidade = new System.Windows.Forms.NumericUpDown();
-            this.btnConfirmar = new System.Windows.Forms.Button();
-            this.btnAnimar = new System.Windows.Forms.Button();
-            this.pictureBoxGrafo = new System.Windows.Forms.PictureBox(); // Instancia o PictureBox
-            
-            // Configuração do Form (Janela)
-            this.SuspendLayout();
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 880); // Tamanho ajustado para caber o grafo!
-            this.Text = "Configuração e Visualização do Grafo";
+            this.ClientSize = new System.Drawing.Size(950, 720);
+            this.Text = "Trabalho de Grafos - Algoritmos";
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
 
-            // 1. Configuração de labelQuantidade
-            this.labelQuantidade.AutoSize = true;
-            this.labelQuantidade.Location = new System.Drawing.Point(20, 20);
-            this.labelQuantidade.Name = "labelQuantidade";
-            this.labelQuantidade.Size = new System.Drawing.Size(250, 20);
-            this.labelQuantidade.Text = "Número de Vértices (mín. 2, máx. 10):";
-
-            // 2. Configuração de numUpDownQuantidade
-            this.numUpDownQuantidade.Location = new System.Drawing.Point(280, 20);
-            this.numUpDownQuantidade.Minimum = new decimal(new int[] { 2, 0, 0, 0 });
-            this.numUpDownQuantidade.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
-            this.numUpDownQuantidade.Value = new decimal(new int[] { 3, 0, 0, 0 });
-            this.numUpDownQuantidade.Name = "numUpDownQuantidade";
-
-            // 3. Configuração de btnConfirmar
-            this.btnConfirmar.Location = new System.Drawing.Point(405, 18);
-            this.btnConfirmar.Name = "btnConfirmar";
-            this.btnConfirmar.Size = new System.Drawing.Size(100, 40);
-            this.btnConfirmar.Text = "Confirmar";
-            this.btnConfirmar.Click += new System.EventHandler(this.btnConfirmar_Click); 
-
-            // 4. Configuração de btnAnimar (Inicialmente oculto)
-            this.btnAnimar.Location = new System.Drawing.Point(30, 450); 
-            this.btnAnimar.Name = "btnAnimar";
-            this.btnAnimar.Size = new System.Drawing.Size(200, 30);
-            this.btnAnimar.Text = "Gerar Grafo e Animar";
-            this.btnAnimar.Visible = false; 
-            this.btnAnimar.Click += new System.EventHandler(this.btnAnimar_Click); 
-            
-            // 5. Configuração de pictureBoxGrafo (Área de Desenho)
+            // --- PictureBox ---
+            this.pictureBoxGrafo = new System.Windows.Forms.PictureBox();
+            this.pictureBoxGrafo.Location = new System.Drawing.Point(300, 60);
+            this.pictureBoxGrafo.Size = new System.Drawing.Size(600, 600);
+            this.pictureBoxGrafo.BackColor = System.Drawing.Color.White;
             this.pictureBoxGrafo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxGrafo.Location = new System.Drawing.Point(20, 450); // Abaixo da área de entrada
-            this.pictureBoxGrafo.Name = "pictureBoxGrafo";
-            this.pictureBoxGrafo.Size = new System.Drawing.Size(560, 400); 
-            this.pictureBoxGrafo.TabIndex = 10;
-            this.pictureBoxGrafo.TabStop = false;
-            // Associa o evento Paint ao método de desenho
-            this.pictureBoxGrafo.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxGrafo_Paint); 
-            
-            // Adiciona todos os controles fixos ao formulário
-            this.Controls.Add(this.labelQuantidade);
-            this.Controls.Add(this.numUpDownQuantidade);
-            this.Controls.Add(this.btnConfirmar);
-            this.Controls.Add(this.btnAnimar);
-            this.Controls.Add(this.pictureBoxGrafo); // Adiciona o canvas
+            this.pictureBoxGrafo.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxGrafo_Paint);
+            this.Controls.Add(this.pictureBoxGrafo);
 
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            // --- Título ---
+            this.lblTitulo = new System.Windows.Forms.Label();
+            this.lblTitulo.Text = "Visualizador de Grafos";
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTitulo.Location = new System.Drawing.Point(10, 10);
+            this.lblTitulo.AutoSize = true;
+            this.Controls.Add(this.lblTitulo);
 
+            // --- Grupo Criação ---
+            this.grpGeracao = new System.Windows.Forms.GroupBox();
+            this.grpGeracao.Text = "1. Criação do Grafo";
+            this.grpGeracao.Location = new System.Drawing.Point(10, 60);
+            this.grpGeracao.Size = new System.Drawing.Size(270, 280);
             
+            this.lblNumV = new System.Windows.Forms.Label() { Text = "Qtd. Vértices:", Location = new System.Drawing.Point(15, 33), AutoSize = true };
+            
+            this.txtNumVertices = new System.Windows.Forms.TextBox(); 
+            this.txtNumVertices.Location = new System.Drawing.Point(100, 30);
+            this.txtNumVertices.Size = new System.Drawing.Size(50, 25);
+            this.txtNumVertices.Text = "5";
+            this.txtNumVertices.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+
+            this.chkDirigido = new System.Windows.Forms.CheckBox() { Text = "Grafo Dirigido?", Location = new System.Drawing.Point(15, 65), AutoSize = true };
+            
+            this.btnGerarAleatorio = new System.Windows.Forms.Button();
+            this.btnGerarAleatorio.Text = "🎲 Gerar Aleatório";
+            this.btnGerarAleatorio.Location = new System.Drawing.Point(15, 100);
+            this.btnGerarAleatorio.Size = new System.Drawing.Size(240, 30);
+            this.btnGerarAleatorio.BackColor = System.Drawing.Color.LightBlue;
+            this.btnGerarAleatorio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGerarAleatorio.Click += new System.EventHandler(this.btnGerarAleatorio_Click);
+
+            System.Windows.Forms.Label lblOu = new System.Windows.Forms.Label() { Text = "--- OU CRIE MANUALMENTE ---", Location = new System.Drawing.Point(40, 145), AutoSize = true, ForeColor = System.Drawing.Color.Gray };
+
+            // MUDANÇA AQUI: Texto explicativo atualizado
+            this.lblManual = new System.Windows.Forms.Label() { Text = "Ligações (Ex: 1-2, 2-3:5):", Location = new System.Drawing.Point(15, 170), AutoSize = true };
+            
+            this.txtArestasManual = new System.Windows.Forms.TextBox();
+            this.txtArestasManual.Location = new System.Drawing.Point(15, 190);
+            this.txtArestasManual.Size = new System.Drawing.Size(240, 25);
+            // MUDANÇA AQUI: Placeholder atualizado
+            this.txtArestasManual.PlaceholderText = "Ex: 1-2, 2-3:10, 3-1:5"; 
+
+            this.btnGerarManual = new System.Windows.Forms.Button();
+            this.btnGerarManual.Text = "✏️ Criar Manual";
+            this.btnGerarManual.Location = new System.Drawing.Point(15, 225);
+            this.btnGerarManual.Size = new System.Drawing.Size(240, 30);
+            this.btnGerarManual.BackColor = System.Drawing.Color.LightGray;
+            this.btnGerarManual.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGerarManual.Click += new System.EventHandler(this.btnGerarManual_Click);
+
+            this.grpGeracao.Controls.Add(lblNumV);
+            this.grpGeracao.Controls.Add(txtNumVertices);
+            this.grpGeracao.Controls.Add(chkDirigido);
+            this.grpGeracao.Controls.Add(btnGerarAleatorio);
+            this.grpGeracao.Controls.Add(lblOu);
+            this.grpGeracao.Controls.Add(lblManual);
+            this.grpGeracao.Controls.Add(txtArestasManual);
+            this.grpGeracao.Controls.Add(btnGerarManual);
+            this.Controls.Add(this.grpGeracao);
+
+            // --- Grupo Algoritmos ---
+            this.grpAlgoritmos = new System.Windows.Forms.GroupBox();
+            this.grpAlgoritmos.Text = "2. Análises";
+            this.grpAlgoritmos.Location = new System.Drawing.Point(10, 350);
+            this.grpAlgoritmos.Size = new System.Drawing.Size(270, 250);
+
+            this.lblDe = new System.Windows.Forms.Label() { Text = "De:", Location = new System.Drawing.Point(15, 30), AutoSize = true };
+            this.cmbOrigem = new System.Windows.Forms.ComboBox() { Location = new System.Drawing.Point(45, 27), Width = 70 };
+            this.lblPara = new System.Windows.Forms.Label() { Text = "Para:", Location = new System.Drawing.Point(130, 30), AutoSize = true };
+            this.cmbDestino = new System.Windows.Forms.ComboBox() { Location = new System.Drawing.Point(170, 27), Width = 70 };
+
+            this.btnAGM = new System.Windows.Forms.Button() { Text = "Exibir AGM", Location = new System.Drawing.Point(15, 70), Size = new System.Drawing.Size(240, 30), BackColor = System.Drawing.Color.LightGreen, FlatStyle = System.Windows.Forms.FlatStyle.Flat };
+            this.btnAGM.Click += new System.EventHandler(this.btnAGM_Click);
+
+            this.btnCaminho = new System.Windows.Forms.Button() { Text = "Caminho Mínimo", Location = new System.Drawing.Point(15, 110), Size = new System.Drawing.Size(240, 30), BackColor = System.Drawing.Color.LightSalmon, FlatStyle = System.Windows.Forms.FlatStyle.Flat };
+            this.btnCaminho.Click += new System.EventHandler(this.btnCaminho_Click);
+
+            this.btnDFS = new System.Windows.Forms.Button() { Text = "Fecho Transitivo (DFS)", Location = new System.Drawing.Point(15, 150), Size = new System.Drawing.Size(240, 30), BackColor = System.Drawing.Color.LightGoldenrodYellow, FlatStyle = System.Windows.Forms.FlatStyle.Flat };
+            this.btnDFS.Click += new System.EventHandler(this.btnDFS_Click);
+
+            this.btnBFS = new System.Windows.Forms.Button() { Text = "Busca em Largura (BFS)", Location = new System.Drawing.Point(15, 190), Size = new System.Drawing.Size(240, 30) };
+            this.btnBFS.Click += new System.EventHandler(this.btnBFS_Click);
+
+            this.grpAlgoritmos.Controls.Add(lblDe);
+            this.grpAlgoritmos.Controls.Add(cmbOrigem);
+            this.grpAlgoritmos.Controls.Add(lblPara);
+            this.grpAlgoritmos.Controls.Add(cmbDestino);
+            this.grpAlgoritmos.Controls.Add(btnAGM);
+            this.grpAlgoritmos.Controls.Add(btnCaminho);
+            this.grpAlgoritmos.Controls.Add(btnDFS);
+            this.grpAlgoritmos.Controls.Add(btnBFS);
+            this.Controls.Add(this.grpAlgoritmos);
+
+            // --- Log ---
+            this.txtLog = new System.Windows.Forms.TextBox();
+            this.txtLog.Location = new System.Drawing.Point(10, 610);
+            this.txtLog.Size = new System.Drawing.Size(270, 100);
+            this.txtLog.Multiline = true;
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtLog.Text = "Log de execução...";
+            this.Controls.Add(this.txtLog);
         }
-
-        #endregion
     }
 }
